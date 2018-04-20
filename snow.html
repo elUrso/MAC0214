@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Snow</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+    </head>
+    <body>
+        <style>
+            body {
+                margin: 0;
+                padding: 0;
+                height: 100%;
+                width: 100%;
+                background: #000;
+            }
+        </style>
+        <canvas id="view" height="600" width="800"></canvas>
+        <script>
+            let newSnow = () => {
+                let _ = {}
+                _.x = Math.random() * mx;
+                _.y = 0;
+                _.v = Math.random() * mv + 5;
+                return _
+            }
+
+
+            let view = document.getElementById('view')
+            let ctx = view.getContext('2d')
+            let mx = 800
+            let my = 600
+            let mv = 50
+            let ms = 256
+            let t = new Date().getTime() / 60
+            let ot = t
+            let dt = 0
+            let snow = []
+            let draw = () => {
+                ctx.clearRect(0, 0, view.width, view.height);
+                ctx.fillStyle = 'white'
+                if(snow.length < ms) {
+                    snow.push(newSnow())
+                }
+                for(i = 0; i < snow.length; i++) {
+                    ctx.fillRect(snow[i].x, snow[i].y, 1, +2)
+                    snow[i].y = snow[i].y + snow[i].v * dt
+                }
+                ot = t
+                t = new Date().getTime() / 60
+                dt = t - ot
+                snow = snow.filter((x) => x.y < my)
+                requestAnimationFrame(draw)
+            }
+
+            requestAnimationFrame(draw)
+        </script>
+    </body>
+</html>
